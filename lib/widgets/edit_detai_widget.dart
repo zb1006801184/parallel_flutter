@@ -1,0 +1,146 @@
+import 'package:editor_2020_9/utils/global.dart';
+import 'package:flutter/material.dart';
+
+
+
+
+class EditDetailWidget extends StatefulWidget {
+  String title;
+  EditDetailWidget({this.title});
+  @override
+  _EditDetailWidgetState createState() => _EditDetailWidgetState();
+
+ static void showEditeBox(BuildContext context, Function callBackHandler,
+    {String title}) {
+  Navigator.of(context)
+      .push(PageRouteBuilder(
+          opaque: false,
+          pageBuilder: (BuildContext context, Animation animation,
+                  Animation secondaryAnimation) =>
+              FadeTransition(
+                  opacity: animation,
+                  child: EditDetailWidget(
+                    title: title,
+                  ))))
+      .then((e) {
+    callBackHandler(e);
+  });
+}
+}
+
+class _EditDetailWidgetState extends State<EditDetailWidget> {
+  TextEditingController controller = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black.withOpacity(0.5),
+      body: InkWell(
+        child: Container(
+            width: Global.ksWidth,
+            height: Global.ksHeight,
+            child: Center(
+              child: Container(
+                  width: 310,
+                  height: 200,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: _buildColunWidget()),
+            )),
+        onTap: () {
+          Navigator.of(context).pop();
+        },
+      ),
+    );
+  }
+
+  Widget _buildColunWidget() {
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 28),
+          child: Text(
+             widget.title,
+            style: TextStyle(
+                fontSize: 15,
+                color: Color(0xFF706864),
+                fontWeight: FontWeight.w600,
+                decoration: TextDecoration.none),
+          ),
+        ),
+        _buildInputBox(),
+        Container(
+            margin: EdgeInsets.only(top: 20),
+            width: 258,
+            height: 44,
+            child: _buildBottomButton()),
+      ],
+    );
+  }
+
+  //输入框
+  Widget _buildInputBox() {
+    return Container(
+      margin: EdgeInsets.only(top: 30),
+      width: 258,
+      height: 33,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5), color: Color(0xFFEDEFF0)),
+      child: TextField(
+        style: TextStyle(fontSize: 10),
+        controller: controller,
+        showCursor: true,
+        decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.only(left: 6.5, bottom: 14),
+            hintStyle: TextStyle(color: Color(0xFFAEAFB7), fontSize: 10),
+            hintText: '请输入' + widget.title),
+      ),
+    );
+  }
+
+  //底部俩个按钮
+  Widget _buildBottomButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          width: 125,
+          height: 44,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(22),
+              color: Color(0xFFEDEFF0)),
+          child:
+              Center(child: _buildText(title: '取消', color: Color(0xFFFF7061))),
+        ),
+        GestureDetector(
+          child: Container(
+            width: 125,
+            height: 44,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                color: Color(0xFFFF706E)),
+            child: Center(child: _buildText(title: '确定', color: Colors.white)),
+          ),
+          onTap: (){
+            Navigator.of(context).pop(controller.text);
+          },
+        ),
+      ],
+    );
+  }
+
+//文本样式
+  Widget _buildText({String title, Color color}) {
+    return Center(
+      child: Text(
+        title,
+        style: TextStyle(
+            fontSize: 15,
+            color: color,
+            fontWeight: FontWeight.w400,
+            decoration: TextDecoration.none),
+      ),
+    );
+  }
+}
